@@ -4,6 +4,7 @@ import 'quill/dist/quill.snow.css';
 import { useEffect, useState } from 'react';
 import '../style/Editor.css';
 import {io} from 'socket.io-client';
+import { useParams } from 'react-router-dom';
 
 const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -31,7 +32,7 @@ const Editor = () =>{
     
     const [socket, setSocket] = useState();
     const [quill, setQuill] = useState();
-
+    const {id} = useParams();
 
     useEffect(() => {
         const socketServer = io('http://localhost:9000');
@@ -45,6 +46,8 @@ const Editor = () =>{
     useEffect(()=>{
         if(!document.querySelector('.ql-container')){
             const quillServer = new Quill('#container', {theme:'snow', modules: {toolbar:toolbarOptions}});
+            quillServer.disable();
+            quillServer.setText('Loading---');
             setQuill(quillServer);
         }
     },[]);
@@ -76,6 +79,17 @@ const Editor = () =>{
         }
     })
 
+    useEffect(()=>{
+        if(quill === null || socket === null) return;
+        socket && socket.once('load-document', document =>{
+            quill && quill.setContents(document);
+            quill && quill.enable();
+        })
+
+        socket && socket.emit('get-document', id);
+
+
+    },[quill, socket, id]);
 
     return(
         <Box className='container'>
