@@ -1,7 +1,7 @@
 import {Box} from '@mui/material';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../style/Editor.css';
 import {io} from 'socket.io-client';
 
@@ -29,20 +29,52 @@ const toolbarOptions = [
 
 const Editor = () =>{
     
+    const [socket, setSocket] = useState();
+    const [quill, setQuill] = useState();
+
 
     useEffect(() => {
         const socketServer = io('http://localhost:9000');
-
+        setSocket(socketServer);
         return () => {
             socketServer.disconnect();
         }
     }, [])
 
+
     useEffect(()=>{
         if(!document.querySelector('.ql-container')){
             const quillServer = new Quill('#container', {theme:'snow', modules: {toolbar:toolbarOptions}});
+            setQuill(quillServer);
         }
     },[]);
+
+
+    useEffect(()=>{
+        if(socket === null || quill === null) return;
+
+        const handleChange = (delta, oldDelta, source) =>{
+            if(source !== 'user') return;
+
+            socket && socket.emit('send-changes', delta);
+        }
+        quill && quill.on('text-change', handleChange);
+        return () =>{
+            quill && quill.off('text-change', handleChange);
+        }
+    },[quill, socket]);
+
+
+    useEffect(()=>{
+        if(quill === null || socket === null) return;
+        const handleChange = (delta)=>{
+            quill.updateContents(delta);
+        }
+        socket && socket.on('receive-changes', handleChange);
+        return()=>{
+            socket && socket.off('receive-changes', handleChange);
+        }
+    })
 
 
     return(
