@@ -1,0 +1,22 @@
+.container{
+    background-color: rgb(241 239 239);
+}
+
+.ql-toolbar.ql-snow{
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: rgb(241 239 239);
+    border: none !important;
+    box-shadow: 0 0 3px 0 rgb(0, 0, 0.5);
+}
+
+.text-field{
+    background-color: white !important;
+    min-height: 100vh !important;
+    width: 60% !important;
+    margin: 10px auto;
+    box-shadow: 0 0 3px 0 rgb(0, 0, 0.5);
+}
