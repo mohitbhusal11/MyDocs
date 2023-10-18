@@ -1,7 +1,6 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -11,9 +10,12 @@
   "author": "Mohit Bhusal",
   "license": "ISC",
   "dependencies": {
+    "mongodb": "^6.1.0",
     "mongoose": "^7.4.3",
     "nodemon": "^3.0.1",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2"
-  }
+  },
+  "keywords": [],
+  "description": ""
 }

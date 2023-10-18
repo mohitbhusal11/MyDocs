@@ -20,7 +20,7 @@ io.on('connection', socket => {
     console.log('connected');
 
     socket.on('get-document', async documentId =>{
-        // const data = "";                         //this is only for when i did not connect with data base
+        // const data = "";                         //this is only for jab mai data base se connent nai hu
         const document = await getDocument(documentId);
         socket.join(documentId);
 
